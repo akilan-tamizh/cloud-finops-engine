@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>CloudFinOps  Cost Optimization Engine</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link
+    rel="stylesheet"
+    href="styles.css"
+  />
+</head>
+
+<body>
+
+  <!-- =====================================================
+       LOGIN
+       ===================================================== -->
+
+  <div id="loginScreen" class="login-screen">
+
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div class="ambient ambient-three"></div>
+
+    <div class="login-card">
+
+      <div class="login-brand">
+        <div class="brand-logo"></div>
+
+        <div>
+          <strong>CloudFinOps</strong>
+          <span>Cost Optimization Engine</span>
+        </div>
+      </div>
+
+      <div class="login-eyebrow">
+        AWS FINANCIAL OPERATIONS
+      </div>
+
+      <h1>
+        Make every cloud
+        <span>dollar count.</span>
+      </h1>
+
+      <p>
+        Monitor cloud spending, detect resource waste,
+        identify optimization opportunities and automate
+        safe cost-saving actions.
+      </p>
+
+      <button
+        id="loginButton"
+        class="login-button"
+      >
+        <span>Continue with AWS Cognito</span>
+        <span class="button-arrow"></span>
+      </button>
+
+      <div class="login-security">
+        <span class="security-dot"></span>
+        Protected by Amazon Cognito
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       DASHBOARD
+       ===================================================== -->
+
+  <div
+    id="dashboardScreen"
+    class="dashboard-shell hidden"
+  >
+
+    <!-- ===================================================
+         SIDEBAR
+         =================================================== -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-brand">
+
+        <div class="sidebar-logo">
+          
+        </div>
+
+        <div class="sidebar-brand-text">
+          <strong>CloudFinOps</strong>
+          <span>Optimization Engine</span>
+        </div>
+
+      </div>
+
+
+      <div class="sidebar-section-label">
+        WORKSPACE
+      </div>
+
+      <nav class="sidebar-nav">
+
+        <a
+          href="#overview"
+          class="sidebar-link active"
+        >
+          <span class="sidebar-icon"></span>
+          <span>Overview</span>
+        </a>
+
+        <a
+          href="#cost"
+          class="sidebar-link"
+        >
+          <span class="sidebar-icon">$</span>
+          <span>Cost Intelligence</span>
+        </a>
+
+        <a
+          href="#resources"
+          class="sidebar-link"
+        >
+          <span class="sidebar-icon"></span>
+          <span>Resources</span>
+        </a>
+
+        <a
+          href="#optimization"
+          class="sidebar-link"
+        >
+          <span class="sidebar-icon"></span>
+          <span>Optimization</span>
+        </a>
+
+        <a
+          href="#automation"
+          class="sidebar-link"
+        >
+          <span class="sidebar-icon"></span>
+          <span>Automation</span>
+        </a>
+
+        <a
+          href="#architecture"
+          class="sidebar-link"
+        >
+          <span class="sidebar-icon"></span>
+          <span>Architecture</span>
+        </a>
+
+      </nav>
+
+
+      <div class="sidebar-spacer"></div>
+
+
+      <div class="sidebar-status-card">
+
+        <div class="sidebar-status-top">
+          <span class="status-live-dot"></span>
+          <span>AWS CONNECTION</span>
+        </div>
+
+        <strong id="sidebarConnection">
+          Connected
+        </strong>
+
+        <small>
+          ap-southeast-2
+        </small>
+
+      </div>
+
+
+      <div class="sidebar-user">
+
+        <div class="user-avatar">
+          J
+        </div>
+
+        <div class="user-info">
+          <strong>CloudFinOps User</strong>
+          <span>AWS Account</span>
+        </div>
+
+        <button
+          id="logoutButton"
+          class="sidebar-logout"
+          title="Logout"
+        >
+          
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <!-- ===================================================
+         MAIN AREA
+         =================================================== -->
+
+    <main class="main-content">
+
+      <!-- TOP BAR -->
+
+      <header class="topbar">
+
+        <div class="mobile-brand">
+          <div class="sidebar-logo"></div>
+
+          <strong>CloudFinOps</strong>
+        </div>
+
+        <div class="topbar-right">
+
+          <div
+            id="connectionStatus"
+            class="connection-pill connected"
+          >
+            <span class="status-dot"></span>
+            <span>Connected</span>
+          </div>
+
+          <button
+            id="refreshButton"
+            class="refresh-button"
+          >
+            <span class="refresh-icon"></span>
+            Refresh
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- ===================================================
+           CONTENT
+           =================================================== -->
+
+      <div class="content-container">
+
+
+        <!-- HERO -->
+
+        <section
+          id="overview"
+          class="hero-section"
+        >
+
+          <div class="hero-copy">
+
+            <div class="eyebrow">
+              CLOUD FINANCIAL OPERATIONS
+            </div>
+
+            <h1>
+              Cloud Cost
+              <span>Overview</span>
+            </h1>
+
+            <p>
+              A unified view of AWS spending, resource health,
+              optimization opportunities and automated FinOps operations.
+            </p>
+
+          </div>
+
+          <div class="hero-meta">
+
+            <div class="live-card">
+
+              <span class="pulse"></span>
+
+              <div>
+                <strong>LIVE MONITORING</strong>
+                <span>Automated AWS analysis</span>
+              </div>
+
+            </div>
+
+            <div class="region-chip">
+              AWS  ap-southeast-2
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             KPI CARDS
+             ================================================= -->
+
+        <section
+          id="cost"
+          class="section-block"
+        >
+
+          <div class="section-heading">
+
+            <div>
+              <span class="section-kicker">
+                FINANCIAL OVERVIEW
+              </span>
+
+              <h2>
+                Cost Summary
+              </h2>
+            </div>
+
+            <span class="data-source">
+              AWS Cost Explorer
+            </span>
+
+          </div>
+
+
+          <div class="kpi-grid">
+
+
+            <!-- CURRENT COST -->
+
+            <article class="kpi-card">
+
+              <div class="kpi-top">
+
+                <div class="kpi-icon blue">
+                  $
+                </div>
+
+                <span class="kpi-label">
+                  CURRENT COST
+                </span>
+
+              </div>
+
+              <strong
+                id="currentCost"
+                class="kpi-value"
+              >
+                $0.00
+              </strong>
+
+              <div class="kpi-footer">
+                <span>Current billing period</span>
+                <span class="mini-status">
+                  LIVE
+                </span>
+              </div>
+
+            </article>
+
+
+            <!-- PREVIOUS COST -->
+
+            <article class="kpi-card">
+
+              <div class="kpi-top">
+
+                <div class="kpi-icon purple">
+                  
+                </div>
+
+                <span class="kpi-label">
+                  PREVIOUS COST
+                </span>
+
+              </div>
+
+              <strong
+                id="previousCost"
+                class="kpi-value"
+              >
+                $0.00
+              </strong>
+
+              <div class="kpi-footer">
+                <span>Previous billing period</span>
+              </div>
+
+            </article>
+
+
+            <!-- COST CHANGE -->
+
+            <article class="kpi-card">
+
+              <div class="kpi-top">
+
+                <div class="kpi-icon cyan">
+                  %
+                </div>
+
+                <span class="kpi-label">
+                  COST CHANGE
+                </span>
+
+              </div>
+
+              <strong
+                id="percentageChange"
+                class="kpi-value"
+              >
+                0%
+              </strong>
+
+              <div class="kpi-footer">
+                <span>Period-over-period</span>
+
+                <span
+                  id="trendBadge"
+                  class="trend-pill"
+                >
+                  STABLE
+                </span>
+              </div>
+
+            </article>
+
+
+            <!-- SAVINGS -->
+
+            <article class="kpi-card savings-kpi">
+
+              <div class="savings-glow"></div>
+
+              <div class="kpi-top">
+
+                <div class="kpi-icon green">
+                  
+                </div>
+
+                <span class="kpi-label">
+                  ESTIMATED SAVINGS
+                </span>
+
+              </div>
+
+              <strong
+                id="estimatedSavings"
+                class="kpi-value savings-value"
+              >
+                $0.00
+              </strong>
+
+              <div class="kpi-footer">
+
+                <span>
+                  Potential monthly savings
+                </span>
+
+                <span class="savings-badge">
+                  OPTIMIZE
+                </span>
+
+              </div>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             COST + HEALTH
+             ================================================= -->
+
+        <section class="dashboard-grid-two">
+
+
+          <!-- COST INTELLIGENCE -->
+
+          <article class="panel large-panel">
+
+            <div class="panel-header">
+
+              <div>
+                <span class="section-kicker">
+                  COST INTELLIGENCE
+                </span>
+
+                <h2>
+                  Cost Analysis
+                </h2>
+              </div>
+
+              <span class="panel-badge">
+                ANALYZED
+              </span>
+
+            </div>
+
+
+            <div class="cost-analysis-layout">
+
+              <div class="trend-main">
+
+                <span class="muted-label">
+                  CURRENT TREND
+                </span>
+
+                <strong id="trend">
+                  STABLE
+                </strong>
+
+                <p>
+                  Spending trend based on the latest
+                  AWS Cost Explorer analysis.
+                </p>
+
+                <div class="trend-line">
+
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+
+                </div>
+
+              </div>
+
+
+              <div class="analysis-stat-list">
+
+                <div class="analysis-stat">
+
+                  <div>
+                    <span>Anomaly Detection</span>
+                    <small>Automated analysis</small>
+                  </div>
+
+                  <strong id="anomaly">
+                    No anomaly
+                  </strong>
+
+                </div>
+
+
+                <div class="analysis-stat">
+
+                  <div>
+                    <span>Currency</span>
+                    <small>Cost Explorer</small>
+                  </div>
+
+                  <strong id="currency">
+                    USD
+                  </strong>
+
+                </div>
+
+
+                <div class="analysis-stat">
+
+                  <div>
+                    <span>Data Source</span>
+                    <small>AWS billing data</small>
+                  </div>
+
+                  <strong>
+                    Cost Explorer
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </article>
+
+
+          <!-- FINOPS HEALTH -->
+
+          <article class="panel health-score-panel">
+
+            <div class="panel-header">
+
+              <div>
+                <span class="section-kicker">
+                  FINOPS HEALTH
+                </span>
+
+                <h2>
+                  Environment Score
+                </h2>
+              </div>
+
+              <span class="panel-badge">
+                LIVE
+              </span>
+
+            </div>
+
+
+            <div class="score-content">
+
+              <div class="score-ring">
+
+                <div class="score-ring-inner">
+
+                  <strong id="finopsScore">
+                    100
+                  </strong>
+
+                  <span>/ 100</span>
+
+                </div>
+
+              </div>
+
+
+              <div class="score-info">
+
+                <strong id="finopsScoreLabel">
+                  Excellent
+                </strong>
+
+                <p id="finopsScoreDescription">
+                  Your monitored AWS environment
+                  currently has a healthy FinOps posture.
+                </p>
+
+                <div class="score-legend">
+
+                  <span>
+                    <i class="dot-green"></i>
+                    Healthy
+                  </span>
+
+                  <span>
+                    <i class="dot-yellow"></i>
+                    Attention
+                  </span>
+
+                  <span>
+                    <i class="dot-red"></i>
+                    Critical
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </section>
+
+
+        <!-- =================================================
+             RESOURCE HEALTH
+             ================================================= -->
+
+        <section
+          id="resources"
+          class="section-block"
+        >
+
+          <div class="section-heading">
+
+            <div>
+              <span class="section-kicker">
+                AWS ENVIRONMENT
+              </span>
+
+              <h2>
+                Resource Health
+              </h2>
+            </div>
+
+            <span class="healthy-chip">
+               MONITORED
+            </span>
+
+          </div>
+
+
+          <div class="resource-grid">
+
+
+            <!-- EC2 -->
+
+            <article class="resource-card">
+
+              <div class="resource-card-top">
+
+                <div class="resource-icon ec2">
+                  EC2
+                </div>
+
+                <span class="resource-status">
+                  COMPUTE
+                </span>
+
+              </div>
+
+              <strong
+                id="ec2Instances"
+                class="resource-number"
+              >
+                0
+              </strong>
+
+              <span class="resource-title">
+                EC2 Instances
+              </span>
+
+              <div class="resource-detail">
+                <span>Stopped</span>
+
+                <strong id="stoppedInstances">
+                  0
+                </strong>
+              </div>
+
+            </article>
+
+
+            <!-- EBS -->
+
+            <article class="resource-card">
+
+              <div class="resource-card-top">
+
+                <div class="resource-icon ebs">
+                  EBS
+                </div>
+
+                <span class="resource-status">
+                  STORAGE
+                </span>
+
+              </div>
+
+              <strong
+                id="ebsVolumes"
+                class="resource-number"
+              >
+                0
+              </strong>
+
+              <span class="resource-title">
+                EBS Volumes
+              </span>
+
+              <div class="resource-detail">
+                <span>Unattached</span>
+
+                <strong id="unattachedEbsVolumes">
+                  0
+                </strong>
+              </div>
+
+            </article>
+
+
+            <!-- EIP -->
+
+            <article class="resource-card">
+
+              <div class="resource-card-top">
+
+                <div class="resource-icon eip">
+                  IP
+                </div>
+
+                <span class="resource-status">
+                  NETWORK
+                </span>
+
+              </div>
+
+              <strong
+                id="elasticIps"
+                class="resource-number"
+              >
+                0
+              </strong>
+
+              <span class="resource-title">
+                Elastic IPs
+              </span>
+
+              <div class="resource-detail">
+                <span>Unused</span>
+
+                <strong id="unusedElasticIps">
+                  0
+                </strong>
+              </div>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SAVINGS VISUALIZATION
+             ================================================= -->
+
+        <section class="dashboard-grid-two">
+
+          <article class="panel savings-breakdown-panel">
+
+            <div class="panel-header">
+
+              <div>
+                <span class="section-kicker">
+                  SAVINGS ANALYTICS
+                </span>
+
+                <h2>
+                  Optimization Potential
+                </h2>
+              </div>
+
+              <span class="panel-badge green-badge">
+                MONTHLY
+              </span>
+
+            </div>
+
+
+            <div class="savings-overview">
+
+              <div class="savings-total">
+
+                <span>
+                  TOTAL POTENTIAL
+                </span>
+
+                <strong id="savingsTotal">
+                  $0.00
+                </strong>
+
+                <small>
+                  estimated monthly savings
+                </small>
+
+              </div>
+
+              <div class="annual-savings">
+
+                <span>ANNUAL POTENTIAL</span>
+
+                <strong id="annualSavings">
+                  $0.00
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div
+              id="savingsBreakdown"
+              class="savings-bars"
+            >
+
+              <div class="savings-empty">
+                No active savings opportunities.
+              </div>
+
+            </div>
+
+          </article>
+
+
+          <!-- SCAN -->
+
+          <article class="panel scan-panel">
+
+            <div class="panel-header">
+
+              <div>
+                <span class="section-kicker">
+                  MONITORING
+                </span>
+
+                <h2>
+                  Latest Resource Scan
+                </h2>
+              </div>
+
+              <span class="panel-badge">
+                AUTOMATED
+              </span>
+
+            </div>
+
+
+            <div class="scan-card">
+
+              <div class="scan-icon">
+                
+              </div>
+
+              <div class="scan-main">
+
+                <strong>
+                  Scanner operational
+                </strong>
+
+                <span>
+                  Last completed scan
+                </span>
+
+                <strong
+                  id="latestScan"
+                  class="scan-time"
+                >
+                  Waiting for scan...
+                </strong>
+
+              </div>
+
+              <div class="scan-live">
+                <span></span>
+                ACTIVE
+              </div>
+
+            </div>
+
+          </article>
+
+        </section>
+
+
+        <!-- =================================================
+             OPTIMIZATION
+             ================================================= -->
+
+        <section
+          id="optimization"
+          class="panel optimization-panel"
+        >
+
+          <div class="panel-header">
+
+            <div>
+              <span class="section-kicker">
+                COST OPTIMIZATION
+              </span>
+
+              <h2>
+                Optimization Opportunities
+              </h2>
+
+              <p class="panel-description">
+                Detected resources that may be generating
+                unnecessary cloud costs.
+              </p>
+            </div>
+
+            <div class="issue-counter">
+
+              <span>
+                DETECTED
+              </span>
+
+              <strong id="issueCount">
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div id="issuesContainer">
+
+            <div class="empty-state">
+
+              <div class="empty-icon">
+                
+              </div>
+
+              <div>
+                <strong>
+                  No optimization issues detected
+                </strong>
+
+                <p>
+                  Your AWS environment currently has
+                  no detected FinOps issues.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             AUTOMATION
+             ================================================= -->
+
+        <section
+          id="automation"
+          class="section-block"
+        >
+
+          <div class="section-heading">
+
+            <div>
+              <span class="section-kicker">
+                AUTOMATED OPERATIONS
+              </span>
+
+              <h2>
+                FinOps Automation
+              </h2>
+            </div>
+
+            <span class="healthy-chip">
+               OPERATIONAL
+            </span>
+
+          </div>
+
+
+          <div class="automation-grid">
+
+
+            <article class="automation-card">
+
+              <div class="automation-icon scanner">
+                SC
+              </div>
+
+              <div class="automation-info">
+
+                <div class="automation-title">
+                  Resource Scanner
+
+                  <span class="automation-active">
+                    ACTIVE
+                  </span>
+                </div>
+
+                <p>
+                  Detects unused AWS resources
+                  and optimization candidates.
+                </p>
+
+                <span class="automation-schedule">
+                   Every 1 hour
+                </span>
+
+              </div>
+
+            </article>
+
+
+            <article class="automation-card">
+
+              <div class="automation-icon analyzer">
+                $
+              </div>
+
+              <div class="automation-info">
+
+                <div class="automation-title">
+                  Cost Analyzer
+
+                  <span class="automation-active">
+                    ACTIVE
+                  </span>
+                </div>
+
+                <p>
+                  Analyzes AWS spending trends
+                  through Cost Explorer.
+                </p>
+
+                <span class="automation-schedule">
+                   Every 1 day
+                </span>
+
+              </div>
+
+            </article>
+
+
+            <article class="automation-card">
+
+              <div class="automation-icon optimizer">
+                
+              </div>
+
+              <div class="automation-info">
+
+                <div class="automation-title">
+                  Optimizer
+
+                  <span class="automation-active">
+                    ACTIVE
+                  </span>
+                </div>
+
+                <p>
+                  Performs controlled cost-saving
+                  actions outside working hours.
+                </p>
+
+                <span class="automation-schedule">
+                   Every 1 hour
+                </span>
+
+              </div>
+
+            </article>
+
+
+            <article class="automation-card">
+
+              <div class="automation-icon alerts">
+                !
+              </div>
+
+              <div class="automation-info">
+
+                <div class="automation-title">
+                  SNS Alerts
+
+                  <span class="automation-active">
+                    ACTIVE
+                  </span>
+
+                </div>
+
+                <p>
+                  Sends notifications when optimization
+                  actions or issues are detected.
+                </p>
+
+                <span class="automation-schedule">
+                   Notification channel ready
+                </span>
+
+              </div>
+
+            </article>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             OPTIMIZATION ACTIVITY
+             ================================================= -->
+
+        <section class="panel activity-panel">
+
+          <div class="panel-header">
+
+            <div>
+              <span class="section-kicker">
+                ACTIVITY
+              </span>
+
+              <h2>
+                Optimization Activity
+              </h2>
+            </div>
+
+            <span class="panel-badge">
+              LIVE DATA
+            </span>
+
+          </div>
+
+
+          <div id="activityContainer">
+
+            <div class="activity-empty">
+              Optimization activity will appear here
+              when automated actions are recorded.
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             AWS ARCHITECTURE
+             ================================================= -->
+
+        <section
+          id="architecture"
+          class="panel architecture-panel"
+        >
+
+          <div class="panel-header">
+
+            <div>
+              <span class="section-kicker">
+                ARCHITECTURE
+              </span>
+
+              <h2>
+                AWS Services
+              </h2>
+            </div>
+
+            <span class="panel-badge">
+              SERVERLESS
+            </span>
+
+          </div>
+
+
+          <div class="services-grid">
+
+
+            <div class="service-card">
+
+              <div class="service-symbol lambda">
+                
+              </div>
+
+              <strong>
+                AWS Lambda
+              </strong>
+
+              <span>
+                Serverless compute
+              </span>
+
+            </div>
+
+
+            <div class="service-card">
+
+              <div class="service-symbol dynamo">
+                
+              </div>
+
+              <strong>
+                DynamoDB
+              </strong>
+
+              <span>
+                FinOps data storage
+              </span>
+
+            </div>
+
+
+            <div class="service-card">
+
+              <div class="service-symbol event">
+                
+              </div>
+
+              <strong>
+                EventBridge
+              </strong>
+
+              <span>
+                Automated scheduling
+              </span>
+
+            </div>
+
+
+            <div class="service-card">
+
+              <div class="service-symbol cost">
+                $
+              </div>
+
+              <strong>
+                Cost Explorer
+              </strong>
+
+              <span>
+                Cost intelligence
+              </span>
+
+            </div>
+
+
+            <div class="service-card">
+
+              <div class="service-symbol cognito">
+                
+              </div>
+
+              <strong>
+                Cognito
+              </strong>
+
+              <span>
+                User authentication
+              </span>
+
+            </div>
+
+
+            <div class="service-card">
+
+              <div class="service-symbol sns">
+                !
+              </div>
+
+              <strong>
+                Amazon SNS
+              </strong>
+
+              <span>
+                Alert notifications
+              </span>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer class="footer">
+
+          <div>
+            <strong>CloudFinOps Engine</strong>
+            <span>
+              Automated Cloud FinOps & Cost Optimization
+            </span>
+          </div>
+
+          <span>
+            AWS Serverless Architecture  ap-southeast-2
+          </span>
+
+        </footer>
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <script src="app.js"></script>
+
+</body>
+</html>
+
