@@ -1,0 +1,43 @@
+﻿{
+    "GroupDefinitions": [
+        {
+            "Type": "DIMENSION",
+            "Key": "RECORD_TYPE"
+        }
+    ],
+    "ResultsByTime": [
+        {
+            "TimePeriod": {
+                "Start": "2026-10-01",
+                "End": "2026-10-19"
+            },
+            "Total": {},
+            "Groups": [
+                {
+                    "Keys": [
+                        "Credit"
+                    ],
+                    "Metrics": {
+                        "UnblendedCost": {
+                            "Amount": "-9.2053990094",
+                            "Unit": "USD"
+                        }
+                    }
+                },
+                {
+                    "Keys": [
+                        "Usage"
+                    ],
+                    "Metrics": {
+                        "UnblendedCost": {
+                            "Amount": "9.2053989577",
+                            "Unit": "USD"
+                        }
+                    }
+                }
+            ],
+            "Estimated": true
+        }
+    ],
+    "DimensionValueAttributes": []
+}

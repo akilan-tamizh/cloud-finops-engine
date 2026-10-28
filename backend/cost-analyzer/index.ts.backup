@@ -1,0 +1,572 @@
+import {
+  CostExplorerClient,
+  GetCostAndUsageCommand,
+} from "@aws-sdk/client-cost-explorer";
+
+import {
+  DynamoDBClient,
+  PutItemCommand,
+} from "@aws-sdk/client-dynamodb";
+
+import {
+  SNSClient,
+  PublishCommand,
+} from "@aws-sdk/client-sns";
+
+const costExplorer = new CostExplorerClient({
+  region: "us-east-1",
+});
+
+const dynamodb = new DynamoDBClient({});
+const sns = new SNSClient({});
+
+const TABLE_NAME = process.env.FINOPS_TABLE_NAME!;
+const SNS_TOPIC_ARN = process.env.SNS_TOPIC_ARN!;
+
+/*
+ * =====================================================
+ * DEMO COST MODE
+ * =====================================================
+ *
+ * The AWS account currently has no Cost Explorer data
+ * available for the requested period.
+
+ * When real AWS billing data is unavailable or both
+ * real values are zero, clearly defined demo values
+ * are used for the presentation dashboard.
+ *
+ * When real non-zero Cost Explorer data becomes
+ * available, the system automatically uses it.
+ */
+
+const DEMO_COST_MODE = true;
+
+const DEMO_CURRENT_COST = 18.40;
+const DEMO_PREVIOUS_COST = 15.20;
+
+/*
+ * =====================================================
+ * DATE HELPERS
+ * =====================================================
+ */
+
+function formatDate(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+function getCurrentMonthStart(): Date {
+  const now = new Date();
+
+  return new Date(
+    Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      1
+    )
+  );
+}
+
+function getPreviousMonthStart(): Date {
+  const currentMonthStart =
+    getCurrentMonthStart();
+
+  return new Date(
+    Date.UTC(
+      currentMonthStart.getUTCFullYear(),
+      currentMonthStart.getUTCMonth() - 1,
+      1
+    )
+  );
+}
+
+/*
+ * =====================================================
+ * COST EXPLORER
+ * =====================================================
+ */
+
+async function getCost(
+  startDate: string,
+  endDate: string
+): Promise<number> {
+  try {
+    const response =
+      await costExplorer.send(
+        new GetCostAndUsageCommand({
+          TimePeriod: {
+            Start: startDate,
+            End: endDate,
+          },
+
+          Granularity: "MONTHLY",
+
+          Metrics: [
+            "UnblendedCost",
+          ],
+        })
+      );
+
+    const results =
+      response.ResultsByTime ?? [];
+
+    let total = 0;
+
+    for (const result of results) {
+      const amount =
+        result.Total?.UnblendedCost?.Amount;
+
+      if (amount) {
+        total += Number(amount);
+      }
+    }
+
+    return Number(total.toFixed(2));
+  }
+  catch (error: any) {
+
+    /*
+     * Cost Explorer may throw this error when
+     * billing data is not available yet.
+     *
+     * Treat it as zero so the application can
+     * safely activate Demo Cost Mode.
+     */
+
+    if (
+      error?.name ===
+      "DataUnavailableException"
+    ) {
+      console.log(
+        "Cost Explorer data is currently unavailable."
+      );
+
+      console.log(
+        "Returning $0.00 so Demo Cost Mode can be evaluated."
+      );
+
+      return 0;
+    }
+
+    /*
+     * Any other AWS error should still fail
+     * normally instead of being hidden.
+     */
+
+    throw error;
+  }
+}
+
+/*
+ * =====================================================
+ * MAIN HANDLER
+ * =====================================================
+ */
+
+export const handler = async () => {
+  console.log(
+    "Cloud FinOps Cost Analyzer started."
+  );
+
+  const now = new Date();
+
+  /*
+   * ===================================================
+   * CURRENT MONTH
+   * ===================================================
+   */
+
+  const currentMonthStart =
+    getCurrentMonthStart();
+
+  const currentPeriodStart =
+    formatDate(currentMonthStart);
+
+  /*
+   * Cost Explorer end date must be after
+   * the start date.
+   *
+   * Tomorrow ensures today's date is included.
+   */
+
+  const currentPeriodEndDate =
+    new Date(
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate() + 1
+      )
+    );
+
+  const currentPeriodEnd =
+    formatDate(currentPeriodEndDate);
+
+  /*
+   * ===================================================
+   * PREVIOUS MONTH
+   * ===================================================
+   */
+
+  const previousMonthStart =
+    getPreviousMonthStart();
+
+  const previousPeriodStart =
+    formatDate(previousMonthStart);
+
+  const previousPeriodEnd =
+    currentPeriodStart;
+
+  console.log(
+    `Current period: ${currentPeriodStart} -> ${currentPeriodEnd}`
+  );
+
+  console.log(
+    `Previous period: ${previousPeriodStart} -> ${previousPeriodEnd}`
+  );
+
+  /*
+   * ===================================================
+   * REAL AWS COST EXPLORER DATA
+   * ===================================================
+   */
+
+  let currentCost =
+    await getCost(
+      currentPeriodStart,
+      currentPeriodEnd
+    );
+
+  let previousCost =
+    await getCost(
+      previousPeriodStart,
+      previousPeriodEnd
+    );
+
+  console.log(
+    `Real Cost Explorer current cost: $${currentCost}`
+  );
+
+  console.log(
+    `Real Cost Explorer previous cost: $${previousCost}`
+  );
+
+  /*
+   * ===================================================
+   * DEMO FALLBACK
+   * ===================================================
+   *
+   * Activate only when Cost Explorer provides
+   * no usable billing amount.
+   */
+
+  let demoMode = false;
+
+  if (
+    DEMO_COST_MODE &&
+    currentCost === 0 &&
+    previousCost === 0
+  ) {
+    console.log(
+      "Real AWS billing data is unavailable or zero."
+    );
+
+    console.log(
+      "Activating clearly labelled demo cost data."
+    );
+
+    currentCost =
+      DEMO_CURRENT_COST;
+
+    previousCost =
+      DEMO_PREVIOUS_COST;
+
+    demoMode = true;
+  }
+
+  /*
+   * ===================================================
+   * COST CHANGE
+   * ===================================================
+   */
+
+  let percentageChange = 0;
+
+  if (previousCost === 0) {
+
+    if (currentCost > 0) {
+      percentageChange = 100;
+    }
+
+  }
+  else {
+
+    percentageChange =
+      (
+        (currentCost - previousCost) /
+        previousCost
+      ) * 100;
+
+  }
+
+  percentageChange =
+    Number(
+      percentageChange.toFixed(2)
+    );
+
+  /*
+   * ===================================================
+   * TREND
+   * ===================================================
+   */
+
+  let trend:
+    | "INCREASING"
+    | "DECREASING"
+    | "STABLE";
+
+  if (percentageChange > 5) {
+
+    trend = "INCREASING";
+
+  }
+  else if (percentageChange < -5) {
+
+    trend = "DECREASING";
+
+  }
+  else {
+
+    trend = "STABLE";
+
+  }
+
+  /*
+   * ===================================================
+   * ANOMALY DETECTION
+   * ===================================================
+   */
+
+  const anomalyThreshold = 20;
+
+  const anomalyDetected =
+    Math.abs(percentageChange) >=
+    anomalyThreshold;
+
+  console.log(
+    `Percentage change: ${percentageChange}%`
+  );
+
+  console.log(
+    `Trend: ${trend}`
+  );
+
+  console.log(
+    `Anomaly detected: ${anomalyDetected}`
+  );
+
+  /*
+   * ===================================================
+   * SAVE ANALYSIS TO DYNAMODB
+   * ===================================================
+   */
+
+  const analysisId =
+    `cost-${Date.now()}`;
+
+  const analyzedAt =
+    new Date().toISOString();
+
+  await dynamodb.send(
+    new PutItemCommand({
+      TableName: TABLE_NAME,
+
+      Item: {
+
+        issueId: {
+          S: analysisId,
+        },
+
+        type: {
+          S: "COST_ANALYSIS",
+        },
+
+        currentPeriodStart: {
+          S: currentPeriodStart,
+        },
+
+        currentPeriodEnd: {
+          S: currentPeriodEnd,
+        },
+
+        previousPeriodStart: {
+          S: previousPeriodStart,
+        },
+
+        previousPeriodEnd: {
+          S: previousPeriodEnd,
+        },
+
+        currentCost: {
+          N: currentCost.toString(),
+        },
+
+        previousCost: {
+          N: previousCost.toString(),
+        },
+
+        percentageChange: {
+          N: percentageChange.toString(),
+        },
+
+        trend: {
+          S: trend,
+        },
+
+        anomalyDetected: {
+          BOOL: anomalyDetected,
+        },
+
+        anomalyThreshold: {
+          N: anomalyThreshold.toString(),
+        },
+
+        currency: {
+          S: "USD",
+        },
+
+        demoMode: {
+          BOOL: demoMode,
+        },
+
+        dataSource: {
+          S: demoMode
+            ? "DEMO_COST_DATA"
+            : "AWS_COST_EXPLORER",
+        },
+
+        analyzedAt: {
+          S: analyzedAt,
+        },
+
+      },
+    })
+  );
+
+  console.log(
+    `Cost analysis saved to DynamoDB: ${analysisId}`
+  );
+
+  /*
+   * ===================================================
+   * SNS ANOMALY ALERT
+   * ===================================================
+   */
+
+  if (
+    anomalyDetected &&
+    SNS_TOPIC_ARN
+  ) {
+
+    await sns.send(
+      new PublishCommand({
+
+        TopicArn:
+          SNS_TOPIC_ARN,
+
+        Subject:
+          "Cloud FinOps Cost Anomaly Detected",
+
+        Message: `
+Cloud FinOps detected a significant cost change.
+
+Current Cost:
+$${currentCost.toFixed(2)}
+
+Previous Cost:
+$${previousCost.toFixed(2)}
+
+Percentage Change:
+${percentageChange}%
+
+Trend:
+${trend}
+
+Anomaly Threshold:
+${anomalyThreshold}%
+
+Data Source:
+${
+  demoMode
+    ? "Demo Cost Data"
+    : "AWS Cost Explorer"
+}
+
+Analysis ID:
+${analysisId}
+        `.trim(),
+
+      })
+    );
+
+    console.log(
+      "SNS anomaly notification sent."
+    );
+  }
+
+  /*
+   * ===================================================
+   * RESPONSE
+   * ===================================================
+   */
+
+  const result = {
+
+    analysisId,
+
+    currentPeriodStart,
+    currentPeriodEnd,
+
+    previousPeriodStart,
+    previousPeriodEnd,
+
+    currentCost,
+    previousCost,
+
+    percentageChange,
+
+    trend,
+
+    anomalyDetected,
+
+    anomalyThreshold,
+
+    currency: "USD",
+
+    demoMode,
+
+    dataSource:
+      demoMode
+        ? "DEMO_COST_DATA"
+        : "AWS_COST_EXPLORER",
+
+    analyzedAt,
+
+  };
+
+  console.log(
+    "Cost analysis result:",
+    JSON.stringify(
+      result,
+      null,
+      2
+    )
+  );
+
+  return {
+
+    statusCode: 200,
+
+    body:
+      JSON.stringify(result),
+
+  };
+};
